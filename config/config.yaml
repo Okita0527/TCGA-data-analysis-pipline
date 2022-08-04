@@ -1,10 +1,11 @@
 
 download:
-    cancerType: TCGA-PAAD
     rawCountType: unstranded         # choice unstranded, stranded_first, stranded_second
-    normalizationCountType:fpkm_unstranded # choice tpm_unstranded, fpkm_unstranded, fpkm_uq_unstranded
-    rawDataDir: rawdata    # put raw files,such as all tcga projects id or raw GDC data
+    normalizationCountType: fpkm_unstranded # choice tpm_unstranded, fpkm_unstranded, fpkm_uq_unstranded
+    rawDataDir: /BI2/project/TCGA_public    # put raw files,such as all tcga projects id or raw GDC data
     resultDir: results
+    
 
-targetGene: EGFR
+cancerType: TCGA-LUAD
+targetGene: ENSG00000146648    #EGFR
 

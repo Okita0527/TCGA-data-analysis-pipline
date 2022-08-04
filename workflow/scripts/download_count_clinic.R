@@ -1,4 +1,4 @@
-##usage: Rscript download_count_clinic.R -i TCGA-PAAD -r unstranded -n fpkm_unstranded -t rawdata -o results
+##usage: Rscript download_count_clinic.R -i TCGA-LUAD -r unstranded -n fpkm_unstranded -t rawdata -o results
 
 
 
@@ -21,6 +21,7 @@ raw_count_type = opt$raw_type
 normalization_count_type = opt$normalization_type
 raw_data_path = opt$rawDataDir
 output_path = opt$outputDir
+
 
 
 ###########  download project directory of GDC
@@ -83,26 +84,27 @@ if(cancer_type %in% all_porject_ID){
       dir.create(output_path)
   }
 
-  #####raw_count输出为csv文件#######
+  #####raw_count#######
   raw_count_data <- download_star_count(cancer_type,raw_count_type)
   rawcount_outputfilename = paste(output_path,"/",cancer_type,".raw.count.csv",sep = "")
   write.csv(raw_count_data,file = rawcount_outputfilename,quote = FALSE) 
   print("RNA-seq raw count has been downloaded")
   
   Sys.sleep(10)
-  #####normalization_count输出为csv文件#######
+  #####normalization_count#######
   normalization_count_data<-download_star_count(cancer_type,normalization_count_type)
   normalizationcount_outputfilename = paste(output_path,"/",cancer_type,".normalization.count.csv",sep = "")
   write.csv(normalization_count_data,file = normalizationcount_outputfilename,quote = FALSE)  
   print("RNA-seq normalization count has been downloaded")
   
   Sys.sleep(10)
-  #####TCGA clinic 输出为XLS文件#######    
+  #####TCGA clinic#######    
   #clinical_data <- download_clinic_data(cancer_type)
-  clinical_data <- GDCquery_clinic(cancer_type, type = "clinical",save.csv = FALSE )
-  clinical_outputfilename = paste(output_path,"/",cancer_type,"_clinic.csv",sep = "")
-  #write.table(clinical_data,file = clinical_outputfilename,quote = FALSE,sep = "\t",row.names = FALSE)
-  write.csv(clinical_data,file = clinical_outputfilename,quote = FALSE) 
+  #clinical_data <- GDCquery_clinic(cancer_type, type = "clinical",save.csv = FALSE )
+  #clinical_outputfilename = paste(output_path,"/",cancer_type,"_clinic.xls",sep = "")
+  information.clinical <- GDCquery_clinic(project = "TCGA-LUAD",type = "clinical") 
+  write.table(information.clinical,file = clinical_outputfilename,quote = FALSE,sep = "\t",row.names = FALSE)
+  #write.csv(clinical_data,file = clinical_outputfilename,quote = FALSE,row.names = FALSE) 
   print("clinic data has been downloaded")
   
   
