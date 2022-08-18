@@ -24,6 +24,47 @@ output_path = opt$outputDir
 
 
 
+cancer_type = "TCGA-LUAD"
+raw_data_path = "E:\\GDCdata"
+output_path = "E:\\GSGC0240555"
+###########  Legacy archive data
+query.raw = GDCquery(
+  project = cancer_type,
+  data.category = "Gene expression",
+  data.type = "Gene expression quantification",
+  platform = "Illumina HiSeq", 
+  file.type  = "results",
+  experimental.strategy = "RNA-Seq",
+  legacy = TRUE
+)
+
+query.normalized =GDCquery(
+    project = cancer_type,
+    data.category = "Gene expression",
+    data.type = "Gene expression quantification",
+    platform = "Illumina HiSeq", 
+    file.type  = "normalized_results",
+    experimental.strategy = "RNA-Seq",
+    legacy = TRUE
+)
+
+
+GDCdownload(query.raw,method = "api",directory = raw_data_path,files.per.chunk = 10) 
+GDCdownload(query.normalized,method = "api",directory = raw_data_path,files.per.chunk = 10) 
+
+count_raw <- GDCprepare(query.raw,directory = raw_data_path)
+count_normalized <- GDCprepare(query.normalized,directory = raw_data_path)
+
+raw.table = assay(count_raw,1)
+normalized.table = assay(count_normalized,1)
+
+raw_outputfilename = paste(output_path,"\\",cancer_type,".raw.count.csv",sep = "")
+normalized_outputfilename = paste(output_path,"\\",cancer_type,".normalization.count.csv",sep = "")
+
+write.csv(raw.table,file = raw_outputfilename,quote = FALSE)  
+write.csv(normalized.table,file = normalized_outputfilename,quote = FALSE)  
+
+
 ###########  download project directory of GDC
 download_porjects <- function(raw_data_path){
     TCGA_projects<-data.frame(id = TCGAbiolinks:::getGDCprojects()$project_id, name = TCGAbiolinks:::getGDCprojects()$name)
